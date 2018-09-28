@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dsharonov/astar"
+	"github.com/dsharonov/petdetective/astar"
 )
 
 //func WaitInput() {

@@ -9,7 +9,7 @@ import (
 	"os"
 	"unicode"
 
-	"github.com/dsharonov/astar"
+	"github.com/dsharonov/petdetective/astar"
 )
 
 const maxCarBag = 4
