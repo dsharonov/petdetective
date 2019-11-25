@@ -41,23 +41,22 @@ auto State::adjacent() -> AdjContainerPtr&
 
             Pets pets = std::get<0>(key());
             int num_captured = 0;
+            auto itcapt = pets.end();
             for (auto it = pets.begin(), endit = pets.end(); it != endit; ++it) {
                 num_captured += it->isCaptured() ? 1 : 0;
                 it->followCar(newcar, false);
+
+                //check if car meets an animal
+                if (!it->isHome() && !it->isCaptured() && newcar == it->animalPosition())
+                    itcapt = it;
             }
 
             m_adjacent->push_back({ shared_from_this(), addState(m_statereg, m_streets, { pets, newcar }) });
 
-            if (num_captured < MAX_CAPTURED)
+            if (num_captured < MAX_CAPTURED && itcapt != pets.end())
             {
-                if (auto found = std::find_if(pets.begin(), pets.end(), [newcar](Pet const& pet) {
-                                              return !pet.isHome() && !pet.isCaptured() && newcar == pet.animalPosition(); });
-                        found != pets.end())
-                {
-                    // newcar is on pos of some animal - can capture
-                    found->followCar(newcar, true);
-                    m_adjacent->push_back({ shared_from_this(), addState(m_statereg, m_streets, { pets, newcar }) });
-                }
+                itcapt->followCar(newcar, true);
+                m_adjacent->push_back({ shared_from_this(), addState(m_statereg, m_streets, { pets, newcar }) });
             }
         }
     }
