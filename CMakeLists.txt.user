@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.10.2, 2019-11-25T19:10:58. -->
+<!-- Written by QtCreator 4.10.2, 2019-11-25T20:57:26. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -322,7 +322,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">PetDetective</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration./home/dmitry/Projects/PetDetective/PetDetective///::///PetDetective</value>
-    <value type="QString" key="RunConfiguration.Arguments">task15.txt task15_2.txt task16.txt task16_2.txt task17.txt task18.txt task18_2.txt task19.txt task21.txt task24.txt task25.txt task26.txt task27.txt task27_2.txt task29.txt task31.txt</value>
+    <value type="QString" key="RunConfiguration.Arguments">task15.txt task15_2.txt task16.txt task16_2.txt task17.txt task18.txt task18_2.txt task19.txt task21.txt task24.txt task25.txt task26.txt task27.txt task27_2.txt task27_3.txt task29.txt task31.txt</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>

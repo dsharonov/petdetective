@@ -243,9 +243,9 @@ int main(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
-    std::vector<std::future<Solution>> futures(argc - 1);
+    std::vector<std::future<Solution>> futures(static_cast<std::size_t>(argc - 1));
 
-    for (int i = 1; i < argc; ++i)
+    for (std::size_t i = 1; i < static_cast<std::size_t>(argc); ++i)
     {
         futures[i - 1] = std::async(std::launch::async, [filename = argv[i]](){
             try {
@@ -274,12 +274,9 @@ int main(int argc, char* argv[])
 
         int i = 0;
         for (auto const& step : sol.sol)
-        {
-            std::cout << "step #" << i++ << std::endl;
-            std::cout << *step << std::endl;
-        }
+            std::cout << "step #" << i++ << '\n' << *step << std::endl;
 
-        std::cout << sol.filename << ": solved in " << sol.sol.size() - 1 << '\n' << std::endl;
+        std::cout << sol.filename << ": solved in " << i - 1 << '\n' << std::endl;
     }
 
     return EXIT_SUCCESS;
