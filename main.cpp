@@ -3,6 +3,7 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <future>
 
 #include <boost/operators.hpp>
 #include <boost/graph/breadth_first_search.hpp>
@@ -12,7 +13,14 @@
 #include "readlines.h"
 #include "state.h"
 
-using Solution = std::list<StatePtr>;
+using StatePath = std::list<StatePtr>;
+
+struct Solution
+{
+    std::string filename;
+    StatePath sol;
+    std::exception_ptr error = nullptr;
+};
 
 struct StateGraph {
     using vertex_descriptor = StatePtr;
@@ -185,9 +193,9 @@ public:
             throw std::runtime_error("No car position specified.");
     }
 
-    Solution Solve() const
+    StatePath Solve() const
     {
-        Solution sol;
+        StatePath sol;
 
         StateGraph g;
         StateRegistryPtr statereg = std::make_shared<StateRegistry>();
@@ -235,28 +243,43 @@ int main(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
-    Solution sol;
+    std::vector<std::future<Solution>> futures(argc - 1);
+
     for (int i = 1; i < argc; ++i)
     {
-        auto filename = argv[i];
+        futures[i - 1] = std::async(std::launch::async, [filename = argv[i]](){
+            try {
+                Task task(filename);
+                return Solution{ filename, task.Solve() };
+            } catch (...) {
+                return Solution{filename, {}, std::current_exception() };
+            }
+        });
+    }
 
-        std::cout << "--- " << filename << " ---" << std::endl;
+
+    for (auto& ftr : futures)
+    {
+        Solution sol = ftr.get();
+
+        std::cout << "--- " << sol.filename << " ---" << std::endl;
 
         try {
-            Task town(filename);
-            sol = town.Solve();
-
+            if (sol.error)
+                std::rethrow_exception(sol.error);
         } catch (std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
-            return EXIT_FAILURE;
+            continue;
         }
 
-        std::for_each(sol.begin(), sol.end(), [i=0](auto s) mutable {
+        int i = 0;
+        for (auto const& step : sol.sol)
+        {
             std::cout << "step #" << i++ << std::endl;
-            std::cout << *s << std::endl;
-        });
+            std::cout << *step << std::endl;
+        }
 
-        std::cout << filename << ": solved in " << sol.size() - 1 << '\n' << std::endl;
+        std::cout << sol.filename << ": solved in " << sol.sol.size() - 1 << '\n' << std::endl;
     }
 
     return EXIT_SUCCESS;
