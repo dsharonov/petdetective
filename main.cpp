@@ -9,11 +9,13 @@
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/visitors.hpp>
 #include <boost/property_map/property_map.hpp>
+#include <boost/coroutine2/all.hpp>
 
 #include "readlines.h"
 #include "state.h"
 
 using StatePath = std::list<StatePtr>;
+using SolCoro = boost::coroutines2::coroutine<StatePtr>;
 
 struct Solution
 {
@@ -51,13 +53,14 @@ struct Predecessors
         (*pmap.data).insert({k, v});
 
         if (k->isFinal())
-            throw k;
+            pmap.sink(k);
     }
 
-    Predecessors(data_type* dptr) : data(dptr) {}
+    Predecessors(data_type* dptr, SolCoro::push_type& sink) : data(dptr), sink(sink) {}
 
 private:
     data_type* data;
+    SolCoro::push_type& sink;
 };
 
 
@@ -204,20 +207,20 @@ public:
         Predecessors::data_type preds;
         Colors::data_type colors;
 
-        try {
+        SolCoro::pull_type solcoro([&](SolCoro::push_type& sink){
             boost::breadth_first_visit(g,
                                        inistate,
                                        buf,
-                                       boost::make_bfs_visitor(boost::record_predecessors(Predecessors(&preds),
+                                       boost::make_bfs_visitor(boost::record_predecessors(Predecessors(&preds, sink),
                                                                                           boost::on_tree_edge())),
                                        Colors(&colors));
 
-        } catch (StatePtr finstate) {
-            for (StatePtr s = finstate; s != inistate; s = preds[s])
-                solpath.push_front(s);
+        });
 
-            solpath.push_front(inistate);
-        }
+        for (StatePtr s = solcoro.get(); s != inistate; s = preds[s])
+            solpath.push_front(s);
+
+        solpath.push_front(inistate);
 
         return solpath;
     }
