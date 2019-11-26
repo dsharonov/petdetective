@@ -38,13 +38,13 @@ public:
     StateKey const& key() const;
     bool isFinal() const;
 
-    friend bool operator==(State const& l, State const& r);
-    friend std::size_t hash_value(State const& s);
-    friend std::ostream& operator<<(std::ostream& os, State const& s);
-
     static StatePtr addState(StateRegistryPtr statereg, StreetsPtr streets, StateKey&& key);
 
 private:
+
+    friend bool operator==(State const& l, State const& r);
+    friend std::size_t hash_value(State const& s);
+    friend std::ostream& operator<<(std::ostream& os, State const& s);
 
     State(StateRegistryPtr statereg, StreetsPtr streets, StateKey&& key);
 
