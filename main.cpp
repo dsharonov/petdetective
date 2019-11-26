@@ -105,25 +105,25 @@ private:
 
 
 boost::graph_traits<StateGraph>::vertex_descriptor
-source(boost::graph_traits<StateGraph>::edge_descriptor e, StateGraph const& g)
+source(boost::graph_traits<StateGraph>::edge_descriptor e, StateGraph const& /*g*/)
 {
     return e.first;
 }
 
 boost::graph_traits<StateGraph>::vertex_descriptor
-target(boost::graph_traits<StateGraph>::edge_descriptor e, StateGraph const& g)
+target(boost::graph_traits<StateGraph>::edge_descriptor e, StateGraph const& /*g*/)
 {
     return e.second;
 }
 
 std::pair<boost::graph_traits<StateGraph>::out_edge_iterator, boost::graph_traits<StateGraph>::out_edge_iterator>
-out_edges(boost::graph_traits<StateGraph>::vertex_descriptor v, StateGraph const& g)
+out_edges(boost::graph_traits<StateGraph>::vertex_descriptor v, StateGraph const& /*g*/)
 {
     return v->outEdges();
 }
 
 boost::graph_traits<StateGraph>::degree_size_type
-out_degree(boost::graph_traits<StateGraph>::vertex_descriptor v, StateGraph const& g)
+out_degree(boost::graph_traits<StateGraph>::vertex_descriptor v, StateGraph const& /*g*/)
 {
     return v->outDegree();
 }
