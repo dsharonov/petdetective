@@ -195,7 +195,7 @@ public:
 
     StatePath Solve() const
     {
-        StatePath sol;
+        StatePath solpath;
 
         StateGraph g;
         StateRegistryPtr statereg = std::make_shared<StateRegistry>();
@@ -213,18 +213,13 @@ public:
                                        Colors(&colors));
 
         } catch (StatePtr finstate) {
-            StatePtr s = finstate;
-            sol.push_back(s);
-            for (;s != inistate; )
-            {
-                s = preds[s];
-                sol.push_back(s);
-            }
+            for (StatePtr s = finstate; s != inistate; s = preds[s])
+                solpath.push_front(s);
+
+            solpath.push_front(inistate);
         }
 
-        sol.reverse();
-
-        return sol;
+        return solpath;
     }
 
 private:
